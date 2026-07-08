@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 
 // تعریف ثابت نسخه افزونه.
 if ( ! defined( 'WC_SMS_AUTH_VERSION' ) ) {
-	define( 'WC_SMS_AUTH_VERSION', '1.0.0' );
+	define( 'WC_SMS_AUTH_VERSION', '1.1.4' );
 }
 
 // تعریف ثابت مسیر فیزیکی پوشه افزونه (با اسلش انتهایی).
@@ -255,31 +255,28 @@ final class WC_SMS_Auth_Modal_Main {
 	 * فرانت‌اند بارگذاری می‌شوند.
 	 */
 	public function enqueue_frontend_assets() {
-		// کتابخانه Tailwind CSS (نسخه CDN) جهت رندر استایل‌های مودال به صورت Utility-first.
-		wp_enqueue_script(
-			'wc-sms-auth-tailwind',
-			'https://cdn.tailwindcss.com',
-			array(),
-			null,
-			false
-		);
-
-		// استایل تقویتی اختصاصی مودال؛ با اولویت !important تداخل‌های
-		// احتمالی reset.css قالب فعال (مثلاً بوردر قرمز حالت فوکوس روی
-		// دکمه/اینپوت) را فقط داخل اسکوپ #authModal خنثی می‌کند.
+		// فایل CSS استایل‌دهی شده با تیلویند به صورت محلی (جایگزین نسخه CDN)
 		wp_enqueue_style(
-			'wc-sms-auth-frontend',
-			WC_SMS_AUTH_PLUGIN_URL . 'assets/css/modal-frontend.css',
+			'wc-sms-auth-tailwind',
+			WC_SMS_AUTH_PLUGIN_URL . 'assets/css/style.css',
 			array(),
 			WC_SMS_AUTH_VERSION
 		);
 
-		// کتابخانه آیکون‌های Lucide.
+		// استایل تقویتی اختصاصی مودال؛ وابسته به فایل تیلویند
+		wp_enqueue_style(
+			'wc-sms-auth-frontend',
+			WC_SMS_AUTH_PLUGIN_URL . 'assets/css/modal-frontend.css',
+			array( 'wc-sms-auth-tailwind' ),
+			WC_SMS_AUTH_VERSION
+		);
+
+		// کتابخانه آیکون‌های Lucide به صورت محلی (جایگزین نسخه CDN)
 		wp_enqueue_script(
 			'wc-sms-auth-lucide',
-			'https://unpkg.com/lucide@latest',
+			WC_SMS_AUTH_PLUGIN_URL . 'assets/js/lucide.min.js',
 			array(),
-			null,
+			WC_SMS_AUTH_VERSION,
 			true
 		);
 
@@ -356,14 +353,14 @@ final class WC_SMS_Auth_Modal_Main {
 				<!-- CLOSE BUTTON (Top Right - Primary Color) -->
 				<button
 					onclick="closeAuthModal()"
-					class="wc-sms-auth-btn-primary absolute top-2 right-2 md:top-4 md:right-4 z-50 p-1.5 md:p-2 bg-[#E7A439] hover:bg-[#cf902f] text-[#FDF6EB] rounded-full shadow-md transition-all duration-200"
+					class="wc-sms-auth-btn-primary wc-sms-auth-close-btn absolute top-2 right-2 md:top-4 md:right-4 z-50 !w-[35px] !h-[35px] !p-0 flex items-center justify-center bg-[#E7A439] hover:bg-[#cf902f] text-[#FDF6EB] rounded-full shadow-md transition-all duration-200"
 					aria-label="بستن مودال"
 				>
-					<i data-lucide="x" class="w-4 h-4 md:w-6 md:h-6"></i>
+					<i data-lucide="x" class="w-5 h-5"></i>
 				</button>
 
 				<!-- RIGHT SIDE: Forms Container (Vertically & Horizontally Centered) -->
-				<div class="w-full md:w-1/2 flex flex-col justify-start md:justify-center items-center px-6 pb-6 pt-[100px] md:px-12 md:pb-12 md:pt-[72px] relative min-h-[480px] md:min-h-0 z-10">
+				<div class="w-full md:w-1/2 h-full flex flex-col justify-center items-center px-6 pb-6 pt-[100px] md:px-12 md:pb-12 md:pt-[72px] relative min-h-[480px] md:min-h-0 z-10">
 
 					<!--
 						تایتل‌های «ثبت نام در سایت» و «ورود به سایت» عمداً به‌صورت
@@ -379,21 +376,21 @@ final class WC_SMS_Auth_Modal_Main {
 						محاسبه می‌شود. نمایش/مخفی‌شدن هرکدام هماهنگ با فرم متناظرش توسط
 						modal-auth.js مدیریت می‌شود.
 					-->
-				<h1 id="signupFormTitle" class="absolute top-[35px] md:top-[75px] left-0 right-0 pb-[20px] md:pb-[30px] text-2xl md:text-[28px] font-bold text-[#E7A439] text-center">
+				<h1 id="signupFormTitle" class="absolute top-[35px] md:top-[75px] left-0 right-0 pb-[20px] md:pb-[30px] text-2xl md:text-[28px] font-bold !text-[#E7A439] text-center">
 					ثبت نام در سایت
 				</h1>
-				<h1 id="loginFormTitle" class="hidden absolute top-[35px] md:top-[75px] left-0 right-0 pb-[20px] md:pb-[30px] text-2xl md:text-[28px] font-bold text-[#E7A439] text-center">
+				<h1 id="loginFormTitle" class="hidden absolute top-[35px] md:top-[75px] left-0 right-0 pb-[20px] md:pb-[30px] text-2xl md:text-[28px] font-bold !text-[#E7A439] text-center">
 					<?php echo esc_html( $login_title ); ?>
 				</h1>
 
 					<!-- FORM 1: REGISTER (ثبت نام در سایت) -->
-					<div id="signupForm" class="w-full max-w-[479px] transition-all duration-500 transform translate-x-0 opacity-100 flex flex-col justify-center">
+					<div id="signupForm" class="w-full max-w-[479px] mt-[70px] transition-all duration-500 transform translate-x-0 opacity-100 flex flex-col justify-center">
 
 						<!-- STEP 1: Basic Information -->
 						<div id="signupStep1" class="transition-all duration-300 transform translate-x-0 opacity-100 flex flex-col justify-center space-y-5">
 							<div>
 								<!-- Form Content -->
-								<div class="space-y-5">
+								<div class="space-y-5 mt-[20px]">
 									<!-- Input 1: Full name -->
 									<div class="flex flex-col space-y-[20.39px]">
 										<label class="text-[#555555] text-[18px] font-medium mr-1" for="reg-name">نام و نام خانوادگی</label>
@@ -420,7 +417,7 @@ final class WC_SMS_Auth_Modal_Main {
 
 									<!-- Remember Me Checkbox -->
 									<div class="flex items-center pt-1 pb-2">
-										<label class="relative flex items-center cursor-pointer">
+										<label class="relative !flex items-center cursor-pointer">
 											<input type="checkbox" id="reg-remember" class="sr-only peer">
 											<div class="w-5 h-5 bg-white border border-gray-300 rounded peer-checked:bg-[#E7A439] peer-checked:border-[#E7A439] transition-all flex items-center justify-center">
 												<i data-lucide="check" class="text-[#FDF6EB] w-3.5 h-3.5 opacity-0 peer-checked:opacity-100 transition-opacity"></i>
@@ -444,7 +441,7 @@ final class WC_SMS_Auth_Modal_Main {
 							</div>
 
 							<!-- Back to login footer -->
-							<div class="mt-[24px] pt-4 border-t border-gray-100 max-w-[479px] text-center">
+							<div class="mt-[24px] border-t border-gray-100 max-w-[479px] text-center">
 								<button onclick="toggleForms('login')" class="wc-sms-auth-link-muted text-sm text-[#66614D] hover:text-[#4f4a3d] font-semibold transition-all">
 									بازگشت به ورود
 								</button>
@@ -516,7 +513,7 @@ final class WC_SMS_Auth_Modal_Main {
 									<button
 										type="button"
 										onclick="goBackToRegisterStep1()"
-										class="wc-sms-auth-btn-outline w-full h-[44px] border border-[#E7A439] hover:bg-[#E7A439]/5 text-[#E7A439] hover:text-[#66614D] font-medium text-base rounded-[2px] transition-all duration-300 flex items-center justify-center"
+										class="wc-sms-auth-btn-outline !mt-4 w-full h-[44px] border border-[#E7A439] hover:bg-[#E7A439]/5 text-[#E7A439] hover:text-[#66614D] font-medium text-base rounded-[2px] transition-all duration-300 flex items-center justify-center"
 									>
 										اصلاح شماره تماس
 									</button>
@@ -525,7 +522,7 @@ final class WC_SMS_Auth_Modal_Main {
 							</div>
 
 							<!-- Footer -->
-							<div class="mt-[24px] pt-4 border-t border-gray-100 max-w-[479px] text-center">
+							<div class="mt-[24px] border-t border-gray-100 max-w-[479px] text-center">
 								<button onclick="toggleForms('login')" class="wc-sms-auth-link-muted text-sm text-[#66614D] hover:text-[#4f4a3d] font-semibold transition-all">
 									انصراف و بازگشت به ورود
 								</button>
@@ -535,10 +532,10 @@ final class WC_SMS_Auth_Modal_Main {
 					</div>
 
 					<!-- FORM 2: LOGIN (ورود به سایت) -->
-					<div id="loginForm" class="w-full max-w-[479px] hidden transition-all duration-500 transform translate-x-12 opacity-0 flex flex-col justify-center space-y-5">
+					<div id="loginForm" class="w-full max-w-[479px] mt-[70px] hidden transition-all duration-500 transform translate-x-12 opacity-0 flex flex-col justify-center space-y-5">
 						<div>
 							<!-- Form Content -->
-							<form id="loginSubmitForm" class="space-y-5">
+							<form id="loginSubmitForm" class="space-y-5 mt-[20px]">
 								<!-- Input 1: Phone Number -->
 								<div class="flex flex-col space-y-[20.39px]">
 									<label class="text-[#555555] text-[18px] font-medium mr-1" for="login-phone">شماره تماس</label>
@@ -553,7 +550,7 @@ final class WC_SMS_Auth_Modal_Main {
 
 								<!-- Remember Me Checkbox -->
 								<div class="flex items-center pt-1 pb-2">
-									<label class="relative flex items-center cursor-pointer">
+									<label class="relative !flex items-center cursor-pointer">
 										<input type="checkbox" id="login-remember" class="sr-only peer">
 										<div class="w-5 h-5 bg-white border border-gray-300 rounded peer-checked:bg-[#E7A439] peer-checked:border-[#E7A439] transition-all flex items-center justify-center">
 											<i data-lucide="check" class="text-[#FDF6EB] w-3.5 h-3.5 opacity-0 peer-checked:opacity-100 transition-opacity"></i>
@@ -576,7 +573,7 @@ final class WC_SMS_Auth_Modal_Main {
 									<button
 										type="button"
 										onclick="toggleForms('signup')"
-										class="wc-sms-auth-btn-outline w-full h-[44px] border border-[#E7A439] hover:bg-[#E7A439]/5 text-[#E7A439] hover:text-[#66614D] font-medium text-base rounded-[2px] transition-all duration-300 flex items-center justify-center"
+										class="wc-sms-auth-btn-outline !mt-4 w-full h-[44px] border border-[#E7A439] hover:bg-[#E7A439]/5 text-[#E7A439] hover:text-[#66614D] font-medium text-base rounded-[2px] transition-all duration-300 flex items-center justify-center"
 									>
 										عضویت در سایت
 									</button>
@@ -585,7 +582,7 @@ final class WC_SMS_Auth_Modal_Main {
 						</div>
 
 						<!-- Spacer to keep symmetric height (بدون متن، فقط جهت تقارن ارتفاع با فرم ثبت‌نام) -->
-						<div class="mt-[24px] pt-4 border-t border-gray-100 max-w-[479px] text-center">
+						<div class="mt-[24px] border-t border-gray-100 max-w-[479px] text-center">
 							<span class="text-sm text-gray-400">&nbsp;</span>
 						</div>
 					</div>
@@ -597,7 +594,7 @@ final class WC_SMS_Auth_Modal_Main {
 					<img
 						src="<?php echo esc_url( $banner_image_url ); ?>"
 						alt="تصویر پس‌زمینه"
-						class="w-full h-full object-cover opacity-90 transition-transform duration-700 hover:scale-105"
+						class="!absolute !inset-0 !w-full !h-full !object-cover opacity-90 transition-transform duration-700 hover:scale-105"
 						onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;100%&quot; height=&quot;100%&quot; viewBox=&quot;0 0 100 100&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;%23E7A439&quot;/><text x=&quot;50%&quot; y=&quot;50%&quot; font-size=&quot;6&quot; fill=&quot;%23fff&quot; text-anchor=&quot;middle&quot;>خوش آمدید</text></svg>'"
 					>
 				</div>

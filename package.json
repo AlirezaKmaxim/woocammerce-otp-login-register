@@ -1,0 +1,14 @@
+{
+  "name": "wc-sms-auth-modal",
+  "version": "1.0.0",
+  "description": "سیستم احراز هویت مستقل و سراسری بر پایه رمز یکبار مصرف (OTP) پیامکی در قالب یک مودال پاپ‌آپ برای ووکامرس.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./assets/css/style.css --minify",
+    "watch": "tailwindcss -i ./src/input.css -o ./assets/css/style.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.2",
+    "tailwindcss": "^4.3.2"
+  }
+}

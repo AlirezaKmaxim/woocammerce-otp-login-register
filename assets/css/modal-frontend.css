@@ -35,12 +35,14 @@
    (مثل «اصلاح شماره تماس» و «عضویت در سایت»). */
 #authModal button.wc-sms-auth-btn-outline {
 	border: 1px solid #E7A439 !important;
+	color: #E7A439 !important;
 }
 
 /* رنگ متن دکمه‌های Outline هنگام هاور باید همیشه رنگ ثانویه (#66614D)
    باشد، نه رنگ سفید/کرمی که قالب هلو به‌اشتباه روی حالت هاور دکمه‌ها
    تحمیل می‌کند. */
 #authModal button.wc-sms-auth-btn-outline:hover {
+	background-color: #E7A439 !important;
 	color: #66614D !important;
 }
 
@@ -65,6 +67,23 @@
 	color: #FDF6EB !important;
 	outline: none !important;
 	box-shadow: none !important;
+}
+
+/* هم‌تراز کردن و وسط‌چین کردن مطلق آیکون ضربدر (X) دکمه بستن پاپ‌آپ
+   جهت لغو پدینگ‌ها و استایل‌های ناخواسته قالب‌ها. */
+#authModal button.wc-sms-auth-btn-primary svg.lucide-x,
+#authModal button.wc-sms-auth-btn-primary i[data-lucide="x"] {
+	position: absolute !important;
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+/* تضمین دایره‌ای بودن دکمه بستن با لغو استایل‌های پیش‌فرض دکمه قالب */
+#authModal button.wc-sms-auth-close-btn {
+	border-radius: 50% !important;
 }
 
 /* رنگ متن دکمه‌های لینک‌مانند «بازگشت به ورود» / «انصراف و بازگشت به

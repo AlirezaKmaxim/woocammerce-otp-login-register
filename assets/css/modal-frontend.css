@@ -1,0 +1,143 @@
+/**
+ * استایل‌های تقویتی فرانت‌اند مودال احراز هویت.
+ *
+ * برخی قالب‌های ووکامرسی (مثلاً قالب «هلو») در فایل reset.css خودشان
+ * استایل‌های سراسری (بوردر/اوت‌لاین قرمزرنگ حالت فوکوس، پس‌زمینه
+ * پیش‌فرض input و ...) را روی تمام تگ‌های button/input اعمال می‌کنند
+ * که با طراحی این مودال تداخل پیدا می‌کند. این فایل، با اولویت بالاتر
+ * (!important) و فقط در اسکوپ #authModal، آن تداخل‌ها را خنثی کرده و
+ * ظاهر صحیح مودال را تضمین می‌کند؛ بنابراین هیچ تاثیری روی بقیه سایت
+ * (خارج از مودال) نخواهد داشت.
+ */
+
+#authModal {
+	z-index: 999999 !important;
+}
+
+#toast {
+	z-index: 1000000 !important;
+}
+
+/* حذف بوردر/اوت‌لاین پیش‌فرض یا تحمیلی قالب روی تمام دکمه‌های مودال. */
+#authModal button {
+	border: 0 !important;
+	outline: none !important;
+}
+
+#authModal button:focus,
+#authModal button:focus-visible,
+#authModal button:active {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+/* بازگرداندن عمدی بوردر رنگ اصلی روی دکمه‌های Outline طراحی
+   (مثل «اصلاح شماره تماس» و «عضویت در سایت»). */
+#authModal button.wc-sms-auth-btn-outline {
+	border: 1px solid #E7A439 !important;
+}
+
+/* رنگ متن دکمه‌های Outline هنگام هاور باید همیشه رنگ ثانویه (#66614D)
+   باشد، نه رنگ سفید/کرمی که قالب هلو به‌اشتباه روی حالت هاور دکمه‌ها
+   تحمیل می‌کند. */
+#authModal button.wc-sms-auth-btn-outline:hover {
+	color: #66614D !important;
+}
+
+/* رنگ پس‌زمینه/متن دکمه‌های اصلی (Primary) مودال - مثل «ثبت نام با کد
+   تایید»، «اعتبار سنجی»، «ورود با کد یکبار مصرف» و دکمه بستن (X) - در
+   تمام حالت‌ها (عادی/هاور/اکتیو/فوکوس) با اولویت بالاتر از استایل‌های
+   تحمیلی قالب (مثل رنگ/بوردر پیش‌فرض هاور قالب هلو) اعمال می‌شود. */
+#authModal button.wc-sms-auth-btn-primary {
+	background-color: #E7A439 !important;
+	color: #FDF6EB !important;
+}
+
+#authModal button.wc-sms-auth-btn-primary:hover {
+	background-color: #cf902f !important;
+	color: #FDF6EB !important;
+}
+
+#authModal button.wc-sms-auth-btn-primary:active,
+#authModal button.wc-sms-auth-btn-primary:focus,
+#authModal button.wc-sms-auth-btn-primary:focus-visible {
+	background-color: #b87a26 !important;
+	color: #FDF6EB !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+/* رنگ متن دکمه‌های لینک‌مانند «بازگشت به ورود» / «انصراف و بازگشت به
+   ورود»، در تمام حالت‌ها (عادی/هاور/اکتیو/فوکوس)، با اولویت بالاتر از
+   استایل‌های تحمیلی قالب (رنگ/بک‌گراند/بوردر/آندرلاین پیش‌فرض هاور-اکتیو
+   قالب هلو روی تگ button). */
+#authModal button.wc-sms-auth-link-muted {
+	background-color: transparent !important;
+	border: 0 !important;
+	outline: none !important;
+	box-shadow: none !important;
+	text-decoration: none !important;
+	color: #66614D !important;
+}
+
+#authModal button.wc-sms-auth-link-muted:hover,
+#authModal button.wc-sms-auth-link-muted:active,
+#authModal button.wc-sms-auth-link-muted:focus,
+#authModal button.wc-sms-auth-link-muted:focus-visible {
+	background-color: transparent !important;
+	border: 0 !important;
+	outline: none !important;
+	box-shadow: none !important;
+	text-decoration: none !important;
+	color: #4f4a3d !important;
+}
+
+/* دکمه «ارسال مجدد کد»: چون خودِ جاوااسکریپت وضعیت فعال/غیرفعال بودن
+   را از طریق ویژگی واقعی disabled مدیریت می‌کند (نه فقط کلاس)، همان
+   ویژگی را در CSS مبنا قرار می‌دهیم تا مستقل از کلاس‌های داینامیک
+   تیلویند، رنگ هاور تحمیلی قالب هلو همیشه خنثی شود. */
+#authModal #resend-code-btn:disabled {
+	color: #9CA3AF !important;
+	cursor: not-allowed !important;
+}
+
+#authModal #resend-code-btn:not(:disabled) {
+	color: #E7A439 !important;
+	cursor: pointer !important;
+}
+
+#authModal #resend-code-btn:not(:disabled):hover {
+	color: #cf902f !important;
+}
+
+/* پس‌زمینه شفاف برای تمام فیلدهای ورودی متنی مودال. */
+#authModal input[type='text'],
+#authModal input[type='tel'] {
+	background-color: transparent !important;
+}
+
+/* بوردر ۱ پیکسلی رنگ اصلی (Primary) در حالت فوکوس/اکتیو فیلدها. */
+#authModal input[type='text']:focus,
+#authModal input[type='tel']:focus,
+#authModal input[type='text']:active,
+#authModal input[type='tel']:active {
+	outline: none !important;
+	border-width: 1px !important;
+	border-color: #E7A439 !important;
+	box-shadow: none !important;
+}
+
+/* تغییر رنگ Placeholder به رنگ اصلی، دقیقاً هنگام فوکوس فیلد. */
+#authModal input[type='text']:focus::placeholder,
+#authModal input[type='tel']:focus::placeholder {
+	color: #E7A439 !important;
+}
+
+/* فونت اختصاصی تمام بخش‌های مودال (تایتل‌ها، لیبل‌ها، اینپوت‌ها،
+   دکمه‌ها، متن‌های راهنما و ...)؛ فایل فونت از قبل توسط قالب/سایت لود
+   شده، پس نیازی به تعریف @font-face یا CDN جداگانه در این افزونه نیست -
+   فقط نام فونت را با اولویت بالاتر از فونت پیش‌فرض قالب رفرنس می‌دهیم. */
+#authModal,
+#authModal * {
+	font-family: 'YekanBakh', sans-serif !important;
+}

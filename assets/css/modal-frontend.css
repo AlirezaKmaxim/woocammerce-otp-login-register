@@ -127,6 +127,8 @@
 	min-width: 0 !important;
 	border-radius: 0 !important;
 	font-weight: 600 !important;
+	display: inline-flex !important;
+	align-items: center !important;
 }
 
 #authModal #resend-code-btn:disabled {

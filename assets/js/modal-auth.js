@@ -189,10 +189,15 @@
 		var loginForm = document.getElementById( 'loginForm' );
 		var signupFormTitle = document.getElementById( 'signupFormTitle' );
 		var loginFormTitle = document.getElementById( 'loginFormTitle' );
+		var otpFormTitle = document.getElementById( 'otpFormTitle' );
 
 		// توقف تایمر OTP احتمالاً در حال اجرا، چون با سوییچ فرم، مرحله
 		// تایید کد دیگر روی صفحه نیست.
 		clearInterval( otpTimerIntervalId );
+
+		if ( otpFormTitle ) {
+			otpFormTitle.classList.add( 'hidden' );
+		}
 
 		if ( 'signup' === target ) {
 			// هنگام بازگشت به فرم ثبت‌نام، همیشه مرحله اول (اطلاعات پایه) را
@@ -283,10 +288,15 @@
 		var step1 = document.getElementById( 'signupStep1' );
 		var step2 = document.getElementById( 'signupStep2' );
 		var signupFormTitle = document.getElementById( 'signupFormTitle' );
+		var otpFormTitle = document.getElementById( 'otpFormTitle' );
 
 		if ( step2 ) {
 			step2.classList.add( 'opacity-0', 'translate-x-12' );
 			step2.classList.remove( 'translate-x-0', 'opacity-100' );
+		}
+
+		if ( otpFormTitle ) {
+			otpFormTitle.classList.add( 'hidden' );
 		}
 
 		setTimeout( function () {
@@ -652,11 +662,17 @@
 			step2.classList.remove( 'opacity-0', 'translate-x-12' );
 			step2.classList.add( 'opacity-100', 'translate-x-0' );
 
-			// مرحله دوم (تأیید تلفن) تایتل مستقل خودش را دارد؛ تایتل
-			// «ثبت نام در سایت» (مخصوص مرحله اول) باید مخفی شود تا با آن
-			// تداخل/دوتاشدگی نداشته باشد.
+			var loginFormTitle = document.getElementById( 'loginFormTitle' );
+			var otpFormTitle = document.getElementById( 'otpFormTitle' );
+
 			if ( signupFormTitle ) {
 				signupFormTitle.classList.add( 'hidden' );
+			}
+			if ( loginFormTitle ) {
+				loginFormTitle.classList.add( 'hidden' );
+			}
+			if ( otpFormTitle ) {
+				otpFormTitle.classList.remove( 'hidden' );
 			}
 
 			// شروع تایمر شمارش معکوس OTP به محض نمایان شدن کامل مرحله دوم.

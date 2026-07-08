@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 
 // تعریف ثابت نسخه افزونه.
 if ( ! defined( 'WC_SMS_AUTH_VERSION' ) ) {
-	define( 'WC_SMS_AUTH_VERSION', '1.1.5' );
+	define( 'WC_SMS_AUTH_VERSION', '1.1.6' );
 }
 
 // تعریف ثابت مسیر فیزیکی پوشه افزونه (با اسلش انتهایی).
@@ -382,6 +382,9 @@ final class WC_SMS_Auth_Modal_Main {
 				<h1 id="loginFormTitle" class="hidden absolute top-[35px] md:top-[75px] left-0 right-0 pb-[20px] md:pb-[30px] text-2xl md:text-[28px] font-bold !text-[#E7A439] text-center">
 					<?php echo esc_html( $login_title ); ?>
 				</h1>
+				<h1 id="otpFormTitle" class="hidden absolute top-[35px] md:top-[75px] left-0 right-0 pb-[20px] md:pb-[30px] text-2xl md:text-[28px] font-bold !text-[#E7A439] text-center">
+					تأیید تلفن
+				</h1>
 
 					<!-- FORM 1: REGISTER (ثبت نام در سایت) -->
 					<div id="signupForm" class="w-full max-w-[479px] mt-[70px] transition-all duration-500 transform translate-x-0 opacity-100 flex flex-col justify-center">
@@ -451,11 +454,6 @@ final class WC_SMS_Auth_Modal_Main {
 						<!-- STEP 2: Phone Verification (تأیید تلفن) -->
 						<div id="signupStep2" class="hidden transition-all duration-300 transform translate-x-12 opacity-0 flex flex-col justify-center space-y-5">
 							<div>
-								<!-- Centered Title, Primary Color, No Border -->
-								<h1 class="text-2xl md:text-[28px] font-bold text-[#E7A439] text-center w-full block mb-8">
-									تأیید تلفن
-								</h1>
-
 								<!-- Active verification feedback -->
 								<div class="mb-6 p-4 bg-[#E7A439]/5 rounded-[8px] max-w-[479px] border border-[#E7A439]/20 flex items-start space-x-3 space-x-reverse">
 									<i data-lucide="smartphone" class="text-[#E7A439] w-5 h-5 mt-0.5"></i>

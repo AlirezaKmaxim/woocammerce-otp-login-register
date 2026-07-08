@@ -164,6 +164,7 @@ class WC_SMS_Auth_API {
 	 */
 	public function handle_send_otp( WP_REST_Request $request ) {
 		$phone  = sanitize_text_field( (string) $request->get_param( 'phone' ) );
+		$phone  = $this->convert_persian_arabic_to_english_digits( $phone );
 		$action = sanitize_text_field( (string) $request->get_param( 'action' ) );
 
 		if ( ! $this->is_valid_iranian_mobile_number( $phone ) ) {
@@ -214,6 +215,21 @@ class WC_SMS_Auth_API {
 				'message' => __( 'کد تایید با موفقیت برای شما ارسال شد.', 'wc-sms-auth' ),
 			)
 		);
+	}
+
+	/**
+	 * تبدیل اعداد فارسی و عربی به معادل انگلیسی جهت ولیدیشن و لاگین صحیح.
+	 *
+	 * @param string $string رشته ورودی حاوی اعداد فارسی/عربی.
+	 * @return string رشته اصلاح‌شده با اعداد انگلیسی.
+	 */
+	private function convert_persian_arabic_to_english_digits( $string ) {
+		$persian_digits = array( '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹' );
+		$arabic_digits  = array( '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩' );
+		$english_digits = array( '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' );
+
+		$string = str_replace( $persian_digits, $english_digits, $string );
+		return str_replace( $arabic_digits, $english_digits, $string );
 	}
 
 	/**
@@ -359,7 +375,19 @@ class WC_SMS_Auth_API {
 	 */
 	public function handle_verify_otp( WP_REST_Request $request ) {
 		$phone = sanitize_text_field( (string) $request->get_param( 'phone' ) );
+		$phone = $this->convert_persian_arabic_to_english_digits( $phone );
 		$code  = sanitize_text_field( (string) $request->get_param( 'code' ) );
+		$code  = $this->convert_persian_arabic_to_english_digits( $code );
+
+		// لایه امنیتی: جلوگیری از هک رمز یکبار مصرف (Anti Brute-Force)
+		// بررسی بلاک بودن شماره به دلیل تلاش‌های ناموفق متوالی
+		$block_key = 'wc_sms_auth_block_' . $phone;
+		if ( get_transient( $block_key ) ) {
+			return $this->format_error_response(
+				__( 'این شماره موبایل به دلیل تلاش‌های ناموفق مکرر موقتاً مسدود شده است. لطفاً ۱۰ دقیقه دیگر دوباره تلاش کنید.', 'wc-sms-auth' ),
+				429
+			);
+		}
 
 		if ( ! $this->is_valid_iranian_mobile_number( $phone ) ) {
 			return $this->format_error_response(
@@ -390,15 +418,40 @@ class WC_SMS_Auth_API {
 		// حالت دوم (متمایز): Transient هنوز معتبر است اما کد وارد شده با
 		// مقدار ذخیره‌شده مطابقت ندارد.
 		if ( ! hash_equals( (string) $stored_code, $code ) ) {
-			return $this->format_error_response(
-				__( 'کد تایید وارد شده صحیح نیست. لطفاً دوباره بررسی و تلاش نمایید.', 'wc-sms-auth' ),
-				401
-			);
+			$attempts_key = 'wc_sms_auth_attempts_' . $phone;
+			$attempts     = (int) get_transient( $attempts_key );
+			$attempts++;
+
+			if ( $attempts >= 5 ) {
+				// ابطال فوری کد تایید برای جلوگیری از سوءاستفاده بیشتر
+				delete_transient( self::OTP_TRANSIENT_PREFIX . $phone );
+				delete_transient( $attempts_key );
+
+				// بلاک کردن شماره برای ۱۰ دقیقه (۶۰۰ ثانیه)
+				set_transient( $block_key, true, 600 );
+
+				return $this->format_error_response(
+					__( 'کد تایید اشتباه است. به دلیل ثبت ۵ تلاش ناموفق، شماره موبایل شما به مدت ۱۰ دقیقه مسدود شد و باید مجدداً درخواست کد کنید.', 'wc-sms-auth' ),
+					429
+				);
+			} else {
+				set_transient( $attempts_key, $attempts, 600 );
+				$remaining = 5 - $attempts;
+				return $this->format_error_response(
+					sprintf(
+						/* translators: %d: تعداد تلاش‌های باقی‌مانده. */
+						__( 'کد تایید وارد شده صحیح نیست. %d تلاش دیگر باقی‌مانده است.', 'wc-sms-auth' ),
+						$remaining
+					),
+					401
+				);
+			}
 		}
 
 		// حذف فوری Transient پس از تایید موفق، تا از استفاده مجدد همان
 		// کد (حمله Replay) در صورت افشای احتمالی آن جلوگیری شود.
 		delete_transient( self::OTP_TRANSIENT_PREFIX . $phone );
+		delete_transient( 'wc_sms_auth_attempts_' . $phone );
 
 		$user_id = $this->find_or_create_user_by_phone( $phone );
 

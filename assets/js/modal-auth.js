@@ -80,6 +80,24 @@
 	var pendingRememberMe = false;
 
 	/**
+	 * تبدیل اعداد فارسی و عربی به معادل انگلیسی.
+	 *
+	 * @param {string} str رشته ورودی حاوی اعداد فارسی/عربی.
+	 * @return {string} رشته اصلاح‌شده با اعداد انگلیسی.
+	 */
+	function toEnglishDigits( str ) {
+		if ( typeof str !== 'string' ) {
+			return str;
+		}
+		var persianDigits = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];
+		var arabicDigits  = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g];
+		for ( var i = 0; i < 10; i++ ) {
+			str = str.replace( persianDigits[i], i ).replace( arabicDigits[i], i );
+		}
+		return str;
+	}
+
+	/**
 	 * دریافت المان Backdrop و کانتینر داخلی (Popup Wrapper) مودال.
 	 *
 	 * @return {{backdrop: (Element|null), container: (Element|null)}}
@@ -532,7 +550,7 @@
 		}
 
 		var otpInput = document.getElementById( 'reg-otp' );
-		var code = otpInput ? otpInput.value.trim() : '';
+		var code = otpInput ? toEnglishDigits( otpInput.value.trim() ) : '';
 
 		if ( ! code ) {
 			showToast( 'لطفاً رمز عبور پیامکی ارسالی را وارد نمایید.' );
@@ -540,7 +558,7 @@
 		}
 
 		var phoneDisplay = document.getElementById( 'targetPhoneDisplay' );
-		var phone = phoneDisplay ? phoneDisplay.textContent.trim() : '';
+		var phone = phoneDisplay ? toEnglishDigits( phoneDisplay.textContent.trim() ) : '';
 
 		if ( ! IRANIAN_MOBILE_REGEX.test( phone ) ) {
 			showToast( 'شماره موبایل معتبر یافت نشد؛ لطفاً فرآیند را از ابتدا آغاز کنید.' );
@@ -752,7 +770,7 @@
 		var phoneInput = document.getElementById( 'reg-phone' );
 		var rememberInput = document.getElementById( 'reg-remember' );
 		var name = nameInput ? nameInput.value.trim() : '';
-		var phone = phoneInput ? phoneInput.value.trim() : '';
+		var phone = phoneInput ? toEnglishDigits( phoneInput.value.trim() ) : '';
 
 		if ( ! name || ! phone ) {
 			showToast( 'لطفاً ابتدا تمامی مشخصات مرحله اول را تکمیل نمایید.' );
@@ -781,7 +799,7 @@
 
 		var phoneInput = document.getElementById( 'login-phone' );
 		var rememberInput = document.getElementById( 'login-remember' );
-		var phone = phoneInput ? phoneInput.value.trim() : '';
+		var phone = phoneInput ? toEnglishDigits( phoneInput.value.trim() ) : '';
 
 		if ( ! IRANIAN_MOBILE_REGEX.test( phone ) ) {
 			showToast( 'لطفاً یک شماره موبایل معتبر وارد نمایید (مانند ۰۹۱۲۳۴۵۶۷۸۹).' );
@@ -880,6 +898,17 @@
 				setTimeout( openAuthModal, 300 );
 			}
 		}
+
+		// شنود فیلدهای ورودی جهت تبدیل خودکار و آنی اعداد فارسی/عربی به انگلیسی در زمان تایپ
+		document.addEventListener( 'input', function ( e ) {
+			var target = e.target;
+			if ( target && ( target.id === 'reg-phone' || target.id === 'login-phone' || target.id === 'reg-otp' ) ) {
+				var cleaned = toEnglishDigits( target.value );
+				if ( cleaned !== target.value ) {
+					target.value = cleaned;
+				}
+			}
+		} );
 
 		// کپچر رویداد Submit فرم مرحله اول «ورود» جهت ارسال Fetch به /send-otp.
 		var loginSubmitForm = document.getElementById( 'loginSubmitForm' );

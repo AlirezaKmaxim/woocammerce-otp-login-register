@@ -115,9 +115,25 @@
    را از طریق ویژگی واقعی disabled مدیریت می‌کند (نه فقط کلاس)، همان
    ویژگی را در CSS مبنا قرار می‌دهیم تا مستقل از کلاس‌های داینامیک
    تیلویند، رنگ هاور تحمیلی قالب هلو همیشه خنثی شود. */
+#authModal #resend-code-btn {
+	background: transparent !important;
+	background-color: transparent !important;
+	border: 0 !important;
+	padding: 0 !important;
+	box-shadow: none !important;
+	outline: none !important;
+	height: auto !important;
+	width: auto !important;
+	min-width: 0 !important;
+	border-radius: 0 !important;
+	font-weight: 600 !important;
+}
+
 #authModal #resend-code-btn:disabled {
 	color: #9CA3AF !important;
 	cursor: not-allowed !important;
+	background: transparent !important;
+	background-color: transparent !important;
 }
 
 #authModal #resend-code-btn:not(:disabled) {

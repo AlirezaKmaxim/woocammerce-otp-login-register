@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 
 // تعریف ثابت نسخه افزونه.
 if ( ! defined( 'WC_SMS_AUTH_VERSION' ) ) {
-	define( 'WC_SMS_AUTH_VERSION', '1.1.7' );
+	define( 'WC_SMS_AUTH_VERSION', '1.1.8' );
 }
 
 // تعریف ثابت مسیر فیزیکی پوشه افزونه (با اسلش انتهایی).
@@ -455,8 +455,8 @@ final class WC_SMS_Auth_Modal_Main {
 						<div id="signupStep2" class="hidden transition-all duration-300 transform translate-x-12 opacity-0 flex flex-col justify-center space-y-5">
 							<div>
 								<!-- Active verification feedback -->
-								<div class="mb-6 p-4 bg-[#E7A439]/5 rounded-[8px] max-w-[479px] border border-[#E7A439]/20 flex items-start space-x-3 space-x-reverse">
-									<i data-lucide="smartphone" class="text-[#E7A439] w-5 h-5 mt-0.5"></i>
+								<div class="mb-6 p-4 bg-[#E7A439]/5 rounded-[8px] max-w-[479px] border border-[#E7A439]/20 flex items-center space-x-5 space-x-reverse">
+									<i data-lucide="smartphone" class="text-[#E7A439] w-5 h-5"></i>
 									<div>
 										<p class="text-sm text-[#555555] leading-relaxed">کد تایید یکبار مصرف به شماره زیر ارسال شد:</p>
 										<p id="targetPhoneDisplay" class="text-base font-bold text-[#E7A439] mt-1 tracking-wider text-left"></p>

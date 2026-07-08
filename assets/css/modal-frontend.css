@@ -138,6 +138,13 @@
 	top: 1.5px !important;
 }
 
+/* انتقال جزئی آیکون تایمر به سمت پایین جهت تراز شدن با متن فارسی */
+#authModal svg.lucide-timer,
+#authModal i[data-lucide="timer"] {
+	position: relative !important;
+	top: 1.5px !important;
+}
+
 #authModal #resend-code-btn:disabled {
 	color: #9CA3AF !important;
 	cursor: not-allowed !important;
